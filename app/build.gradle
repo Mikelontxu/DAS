@@ -33,6 +33,7 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+    implementation libs.room.common
     // Dependencias de Room Database
     implementation libs.androidx.room.runtime
     annotationProcessor libs.androidx.room.compiler
