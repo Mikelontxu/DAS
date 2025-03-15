@@ -1,6 +1,10 @@
 package com.example.proyecto;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -40,5 +44,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    @SuppressLint("MissingSuperCall")
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("¿Estás seguro que quieres salir de la aplicación?")
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }

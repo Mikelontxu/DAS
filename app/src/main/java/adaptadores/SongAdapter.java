@@ -1,5 +1,6 @@
 package adaptadores;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.proyecto.R;
+import com.example.proyecto.detallesCancion;
 
 import java.util.List;
 import database.Song;
@@ -33,6 +35,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         Song song = songList.get(position);
         holder.songTitulo.setText(song.getTitulo());
         holder.songArtista.setText(song.getArtista());
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), detallesCancion.class);
+            intent.putExtra("titulo", song.getTitulo());
+            intent.putExtra("artista", song.getArtista());
+            intent.putExtra("album", song.getAlbum());
+            intent.putExtra("fecha", song.getFecha());
+            intent.putExtra("duracion", song.getDuracion());
+            intent.putExtra("genero", song.getGenero());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
