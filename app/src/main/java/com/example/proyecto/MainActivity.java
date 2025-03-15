@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -26,6 +28,7 @@ import java.util.concurrent.Executors;
 import database.AppDatabase;
 import database.Song;
 import adaptadores.SongAdapter;
+import utils.TemasUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,10 +38,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Song> songList = new ArrayList<>();
     private RecyclerView recyclerView;
 
+    // MainActivity.java
+// MainActivity.java
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View rootView = findViewById(R.id.drawer_layout);
+        TemasUtils.applyTheme(this, rootView);
 
         // Set up the toolbar and navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
 
         adapter.setOnItemClickListener(song -> {
-            Intent intent = new Intent(MainActivity.this, detallesCancion.class);
+            Intent intent = new Intent(MainActivity.this, detallesCancion.class); // Ensure this points to detallesCancion
             intent.putExtra("id", song.getId());
             intent.putExtra("titulo", song.getTitulo());
             intent.putExtra("artista", song.getArtista());
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             launcher.launch(intent);
         });
     }
-
     private void loadSongs() {
         executorService.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(getApplicationContext());

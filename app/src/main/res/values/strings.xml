@@ -2,7 +2,7 @@
     <string name="title">MUSIC LIBRARY</string>
     <string name="start">Entrar en la aplicación</string>
     <string name="config">Configuración</string>
-    <string name="app_name">Proyecto</string>
+    <string name="app_name">Creador de Playlists</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string-array name="theme_options">

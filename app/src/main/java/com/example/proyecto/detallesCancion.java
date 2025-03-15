@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import database.AppDatabase;
 import database.Song;
+import utils.TemasUtils;
 
 public class detallesCancion extends AppCompatActivity {
 
@@ -22,6 +23,7 @@ public class detallesCancion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_cancion);
+        TemasUtils.applyTheme(this, findViewById(android.R.id.content));
 
         TextView titulo = findViewById(R.id.titulo);
         TextView artista = findViewById(R.id.artista);
