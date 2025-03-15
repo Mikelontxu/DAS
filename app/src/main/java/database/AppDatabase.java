@@ -58,6 +58,60 @@ public abstract class AppDatabase extends RoomDatabase {
                 song2.setDuracion("4:07");
                 song2.setGenero("Pop");
                 dao.insertSong(song2);
+
+                Song song3 = new Song();
+                song3.setTitulo("Die Young");
+                song3.setArtista("Kesha");
+                song3.setAlbum("Warrior");
+                song3.setFecha("2012-11-25");
+                song3.setDuracion("3:33");
+                song3.setGenero("Pop");
+                dao.insertSong(song3);
+
+                Song song4 = new Song();
+                song4.setTitulo("Piano man");
+                song4.setArtista("Billy Joel");
+                song4.setAlbum("");
+                song4.setFecha("1973-11-02");
+                song4.setDuracion("5:38");
+                song4.setGenero("Rock");
+                dao.insertSong(song4);
+
+                Song song5 = new Song();
+                song5.setTitulo("Dont Stop me Now");
+                song5.setArtista("Queen");
+                song5.setAlbum("Jazz");
+                song5.setFecha("1978-01-26");
+                song5.setDuracion("3:29");
+                song5.setGenero("Rock");
+                dao.insertSong(song5);
+
+                Song song6 = new Song();
+                song6.setTitulo("Another One Bites the Dust");
+                song6.setArtista("Queen");
+                song6.setAlbum("The Game");
+                song6.setFecha("1980-06-30");
+                song6.setDuracion("3:36");
+                song6.setGenero("Rock");
+                dao.insertSong(song6);
+
+                Song song7 = new Song();
+                song7.setTitulo("More than a Feeling");
+                song7.setArtista("Boston");
+                song7.setAlbum("Boston");
+                song7.setFecha("1976-08-25");
+                song7.setDuracion("4:45");
+                song7.setGenero("Rock");
+                dao.insertSong(song7);
+
+                Song song8 = new Song();
+                song8.setTitulo("Mr. Blue Sky");
+                song8.setArtista("Electric Light Orchestra");
+                song8.setAlbum("Out of the Blue");
+                song8.setFecha("1977-10-03");
+                song8.setDuracion("5:05");
+                song8.setGenero("Rock");
+                dao.insertSong(song8);
             });
         }
     };
