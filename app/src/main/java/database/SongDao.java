@@ -9,7 +9,7 @@ import java.util.List;
 
 @Dao
 public interface SongDao {
-    @Query("SELECT * FROM song")
+    @Query("SELECT * FROM Cancion")
     List<Song> getAllSongs();
 
     @Insert

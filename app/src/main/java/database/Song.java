@@ -1,9 +1,11 @@
 package database;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "Cancion")
 public class Song {
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -28,11 +30,20 @@ public class Song {
     public Song() {
     }
 
+    public Song(String titulo, String artista, String album, String fecha, String duracion, String genero) {
+        this.titulo = titulo;
+        this.artista = artista;
+        this.album = album;
+        this.fecha = fecha;
+        this.duracion = duracion;
+        this.genero = genero;
+    }
+
     public int getId() {
         return id;
     }
 
-    public String getTitle() {
+    public String getTitulo() {
         return titulo;
     }
 
@@ -60,7 +71,7 @@ public class Song {
         this.id = id;
     }
 
-    public void setTitle(String titulo) {
+    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
