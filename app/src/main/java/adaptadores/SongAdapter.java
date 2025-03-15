@@ -1,26 +1,30 @@
 package adaptadores;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.example.proyecto.R;
-import com.example.proyecto.detallesCancion;
-
+import java.util.ArrayList;
 import java.util.List;
 import database.Song;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private List<Song> songList;
+    private OnItemClickListener onItemClickListener;
 
-    // Constructor
+    public interface OnItemClickListener {
+        void onItemClick(Song song);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
     public SongAdapter(List<Song> songList) {
-        this.songList = songList;
+        this.songList = songList != null ? songList : new ArrayList<>();
     }
 
     @NonNull
@@ -37,20 +41,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         holder.songArtista.setText(song.getArtista());
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), detallesCancion.class);
-            intent.putExtra("titulo", song.getTitulo());
-            intent.putExtra("artista", song.getArtista());
-            intent.putExtra("album", song.getAlbum());
-            intent.putExtra("fecha", song.getFecha());
-            intent.putExtra("duracion", song.getDuracion());
-            intent.putExtra("genero", song.getGenero());
-            v.getContext().startActivity(intent);
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(song);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
         return songList.size();
+    }
+
+    public void updateSongs(List<Song> newSongList) {
+        this.songList = newSongList != null ? newSongList : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public static class SongViewHolder extends RecyclerView.ViewHolder {

@@ -34,6 +34,10 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.room.common
+    // Dependencias Toolbar
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.navigation:navigation-fragment:2.6.0'
+    implementation 'androidx.navigation:navigation-ui:2.6.0'
     // Dependencias recycler view y card view
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'

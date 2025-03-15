@@ -2,6 +2,7 @@ package database;
 
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -14,4 +15,8 @@ public interface SongDao {
 
     @Insert
     void insertSong(Song song);
+
+    @Delete
+    void deleteSong(Song song);
+
 }
