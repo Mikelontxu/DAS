@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".detallesCancion" />
         <activity android:name=".crearCancion" />
+        <activity android:name=".SettingsActivity" />
     </application>
 
 </manifest>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="username"
+        android:title="Nombre de usuario"
+        android:summary="Introduce tu nombre de usuario"
+        android:inputType="text" />
+
+    <ListPreference
+        android:key="theme"
+        android:title="Tema"
+        android:summary="Elige el tema de la aplicación"
+        android:entries="@array/theme_options"
+        android:entryValues="@array/theme_values"
+        android:defaultValue="light" />
+
+</PreferenceScreen>

@@ -43,6 +43,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     // Dependencias de Room Database
     implementation libs.androidx.room.runtime
+    implementation libs.androidx.preference
     annotationProcessor libs.androidx.room.compiler
 
     testImplementation libs.junit

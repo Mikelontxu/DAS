@@ -1,9 +1,12 @@
 package com.example.proyecto;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,21 +45,31 @@ public class detallesCancion extends AppCompatActivity {
         finish();
     }
 
+
     public void borrarCancion(View view) {
         if (id != -1) {
-            executorService.execute(() -> {
-                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                Song song = new Song();
-                song.setId(id);
-                db.songDao().deleteSong(song);
+            new AlertDialog.Builder(this)
+                    .setMessage("¿Estás seguro que quieres borrar esta canción?")
+                    .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            executorService.execute(() -> {
+                                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+                                Song song = new Song();
+                                song.setId(id);
+                                db.songDao().deleteSong(song);
 
-                runOnUiThread(() -> {
-                    // Enviar resultado a MainActivity
-                    Intent resultIntent = new Intent();
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
-                });
-            });
+                                runOnUiThread(() -> {
+                                    // Enviar resultado a MainActivity para recargar la lista de canciones
+                                    Intent resultIntent = new Intent();
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
+                                });
+                            });
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
         }
     }
 }

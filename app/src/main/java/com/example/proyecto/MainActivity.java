@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-        }
         new AlertDialog.Builder(this)
                 .setMessage("¿Estás seguro que quieres salir de la aplicación?")
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
@@ -113,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 })
                 .setNegativeButton("No", null)
                 .show();
+        }
     }
 
     @Override
@@ -122,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             // Handle the home action
         } else if (id == R.id.nav_settings) {
-            // Handle the settings action
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
