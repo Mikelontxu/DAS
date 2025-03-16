@@ -1,10 +1,8 @@
 package com.example.proyecto;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.OnBackPressedCallback;
@@ -68,6 +66,7 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
