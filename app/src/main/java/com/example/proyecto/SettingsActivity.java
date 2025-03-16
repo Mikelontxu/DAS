@@ -5,24 +5,35 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 import android.view.View;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import database.AppDatabase;
 import utils.TemasUtils;
 
 public class SettingsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         };
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -99,9 +111,36 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+
+        private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences, rootKey);
+
+            Preference deleteAllSongsPreference = findPreference("delete_all_songs");
+            if (deleteAllSongsPreference != null) {
+                deleteAllSongsPreference.setOnPreferenceClickListener(preference -> {
+                    showConfirmationDialog();
+                    return true;
+                });
+            }
+        }
+
+        private void showConfirmationDialog() {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Confirmar borrado")
+                    .setMessage("¿Estás seguro de que quieres borrar todos los datos de la base de datos?")
+                    .setPositiveButton("Sí", (dialog, which) -> deleteAllSongs())
+                    .setNegativeButton("No", null)
+                    .show();
+        }
+        private void deleteAllSongs() {
+            executorService.execute(() -> {
+                AppDatabase db = AppDatabase.getDatabase(getContext());
+                db.songDao().deleteAllSongs();
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Canciones borradas", Toast.LENGTH_SHORT).show());
+            });
         }
     }
 

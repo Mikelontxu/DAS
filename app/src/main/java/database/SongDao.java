@@ -19,4 +19,7 @@ public interface SongDao {
     @Delete
     void deleteSong(Song song);
 
+    @Query("DELETE FROM Cancion")
+    void deleteAllSongs();
+
 }
