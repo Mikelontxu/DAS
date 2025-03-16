@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize the adapter with an empty list
+        // Inicializa el adaptador con la lista de canciones
         adapter = new SongAdapter(songList);
         recyclerView.setAdapter(adapter);
 

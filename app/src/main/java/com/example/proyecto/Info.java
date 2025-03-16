@@ -68,19 +68,24 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_descargar_lista) {
             Intent intent = new Intent(this, DescargarLista.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_importar_lista) {
             Intent intent = new Intent(this, ImportarLista.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_info) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
+            // Actividad actual
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

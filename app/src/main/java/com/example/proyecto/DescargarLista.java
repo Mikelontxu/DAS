@@ -88,6 +88,7 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
                 Intent intent = new Intent(DescargarLista.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -187,18 +188,25 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_descargar_lista) {
             // Actividad actual
         } else if (id == R.id.nav_importar_lista) {
             Intent intent = new Intent(this, ImportarLista.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_info) {
             Intent intent = new Intent(this, Info.class);
-            startActivity(intent);        }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

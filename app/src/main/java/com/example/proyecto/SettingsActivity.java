@@ -72,7 +72,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         };
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
-        // Handle back button press using OnBackPressedDispatcher
+        // Manejar el boton de atras usando OnBackPressedDispatcher
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -99,19 +99,27 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_descargar_lista) {
             Intent intent = new Intent(this, DescargarLista.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_importar_lista) {
             Intent intent = new Intent(this, ImportarLista.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_info) {
             Intent intent = new Intent(this, Info.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
