@@ -10,6 +10,7 @@ import android.widget.Toast;
 import android.view.View;
 
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -70,6 +71,16 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+
+        // Handle back button press using OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -79,12 +90,6 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
