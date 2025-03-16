@@ -13,6 +13,10 @@
         android:icon="@drawable/ic_download"
         android:title="Descargar Lista"/>
     <item
+        android:id="@+id/nav_importar_lista"
+        android:icon="@drawable/ic_import"
+        android:title="Importar Lista"/>
+    <item
         android:id="@+id/nav_info"
         android:icon="@drawable/ic_info"
         android:title="Info"/>

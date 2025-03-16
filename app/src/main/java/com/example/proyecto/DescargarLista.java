@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import database.AppDatabase;
 import database.Song;
+import utils.TemasUtils;
 
 public class DescargarLista extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +46,7 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descargar_lista);
+        TemasUtils.applyTheme(this, findViewById(R.id.drawer_layout));
 
         // Set up the toolbar and navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
