@@ -36,8 +36,8 @@ public class crearCancion extends AppCompatActivity {
                 String tituloText = titulo.getText().toString();
                 String artistaText = artista.getText().toString();
 
-                if (tituloText.isEmpty() || artistaText.isEmpty()) {
-                    new AlertDialog.Builder(crearCancion.this)
+                if (tituloText.isEmpty() || artistaText.isEmpty()) { // Comprobamos que los campos obligatorios no estén vacíos
+                    new AlertDialog.Builder(crearCancion.this) //Salta un dialogo si los campos obligatorios están vacíos
                             .setTitle("Campos obligatorios")
                             .setMessage("Por favor, introduce el título y el artista de la canción.")
                             .setPositiveButton("OK", null)

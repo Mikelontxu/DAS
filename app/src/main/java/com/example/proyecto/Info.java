@@ -52,10 +52,10 @@ public class Info extends AppCompatActivity implements NavigationView.OnNavigati
         btnOpenGmail.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("message/rfc822");
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Asunto");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"soporteproyecto@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Soporte Proyecto");
             if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(Intent.createChooser(intent, "Choose an email client"));
+                startActivity(Intent.createChooser(intent, "Elige una aplicación de correo"));
             }
         });
     }
