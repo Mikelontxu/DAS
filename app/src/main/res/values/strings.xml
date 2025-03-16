@@ -5,12 +5,4 @@
     <string name="app_name">Creador de Playlists</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string-array name="theme_options">
-        <item>Claro</item>
-        <item>Oscuro</item>
-    </string-array>
-    <string-array name="theme_values">
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
 </resources>

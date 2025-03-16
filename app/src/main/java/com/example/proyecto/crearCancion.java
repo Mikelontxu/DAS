@@ -20,7 +20,7 @@ public class crearCancion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_cancion);
-        TemasUtils.applyTheme(this, findViewById(android.R.id.content));
+        TemasUtils.applyTheme(this, findViewById(R.id.root_layout));
 
         EditText titulo = findViewById(R.id.titulo);
         EditText artista = findViewById(R.id.artista);

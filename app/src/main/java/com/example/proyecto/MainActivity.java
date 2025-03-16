@@ -3,6 +3,7 @@ package com.example.proyecto;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
@@ -38,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Song> songList = new ArrayList<>();
     private RecyclerView recyclerView;
 
-    // MainActivity.java
-// MainActivity.java
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = prefs.getString("theme", "white");
         setContentView(R.layout.activity_main);
         View rootView = findViewById(R.id.drawer_layout);
         TemasUtils.applyTheme(this, rootView);
@@ -129,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_descargar_lista) {
+            // Handle Descargar Lista action
+        } else if (id == R.id.nav_info) {
+            // Handle Info action
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

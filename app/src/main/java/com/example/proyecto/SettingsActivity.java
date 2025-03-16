@@ -23,10 +23,11 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
 
     private DrawerLayout drawerLayout;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = prefs.getString("theme", "white");
         setContentView(R.layout.activity_settings);
         View rootView = findViewById(R.id.drawer_layout);
         TemasUtils.applyTheme(this, rootView);
@@ -49,21 +50,28 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
                 .replace(R.id.settings_container, new SettingsFragment())
                 .commit();
 
-        // Listen for preference changes
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Register the preference change listener
         preferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("theme")) {
-                recreate(); // Restart activity to apply new theme
+            if ("theme".equals(key)) {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -74,7 +82,13 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
-            // Handle the settings action
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else if (id == R.id.nav_descargar_lista) {
+            // Handle Descargar Lista action
+        } else if (id == R.id.nav_info) {
+            // Handle Info action
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

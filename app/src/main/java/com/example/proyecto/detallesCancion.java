@@ -23,7 +23,7 @@ public class detallesCancion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_cancion);
-        TemasUtils.applyTheme(this, findViewById(android.R.id.content));
+        TemasUtils.applyTheme(this, findViewById(R.id.root_layout));
 
         TextView titulo = findViewById(R.id.titulo);
         TextView artista = findViewById(R.id.artista);
@@ -46,7 +46,6 @@ public class detallesCancion extends AppCompatActivity {
     public void volverAtras(View view) {
         finish();
     }
-
 
     public void borrarCancion(View view) {
         if (id != -1) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="?attr/preferenceTheme">
 
     <EditTextPreference
         android:key="username"
@@ -13,6 +14,6 @@
         android:summary="Elige el tema de la aplicación"
         android:entries="@array/theme_options"
         android:entryValues="@array/theme_values"
-        android:defaultValue="light" />
+        android:defaultValue="white" />
 
 </PreferenceScreen>

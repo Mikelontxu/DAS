@@ -9,13 +9,21 @@ import com.example.proyecto.R;
 public class TemasUtils {
     public static void applyTheme(Context context, View rootView) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String theme = prefs.getString("theme", "light");
-        if ("dark".equals(theme)) {
-            context.setTheme(R.style.AppTheme_Dark);
-            rootView.setBackgroundColor(context.getResources().getColor(R.color.dark_background));
-        } else {
-            context.setTheme(R.style.AppTheme_Light);
-            rootView.setBackgroundColor(context.getResources().getColor(R.color.light_background));
+        String theme = prefs.getString("theme", "white");
+        switch (theme) {
+            case "light_green":
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.light_green_background));
+                break;
+            case "light_purple":
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.light_purple_background));
+                break;
+            case "gray":
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.gray_background));
+                break;
+            case "white":
+            default:
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.white_background));
+                break;
         }
     }
 }
