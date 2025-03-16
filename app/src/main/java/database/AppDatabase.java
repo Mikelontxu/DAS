@@ -71,7 +71,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 Song song4 = new Song();
                 song4.setTitulo("Piano man");
                 song4.setArtista("Billy Joel");
-                song4.setAlbum("");
+                song4.setAlbum("Null");
                 song4.setFecha("1973/11/02");
                 song4.setDuracion("5:38");
                 song4.setGenero("Rock");
