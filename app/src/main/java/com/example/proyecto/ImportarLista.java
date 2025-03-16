@@ -86,7 +86,8 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_importar_lista) {
             // Current activity
         } else if (id == R.id.nav_info) {
-            // Handle Info action
+            Intent intent = new Intent(this, Info.class);
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

@@ -29,6 +29,7 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".DescargarLista" />
         <activity android:name=".ImportarLista" />
+        <activity android:name=".Info" />
     </application>
 
 </manifest>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/navy_blue"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Esta aplicación esta hecha para poder crear listas de música y poder guardarlas cuando quieras. Así podrás tener tus listas de música favoritas siempre a mano. \n\nPara utilizarla facilmente solo hay que ir al Home y en el empezar a crear canciones con el boton de arriba a la derecha. Además las podras revisar haciendo click en ellas cuando aparezcan en el Home. \n\nLuego si quieres importar o exportar, tienes otros dos menus en el desplegable de la izquierda."
+                android:textSize="18sp"
+                android:padding="16dp"
+                android:layout_gravity="center"/>
+            <Button
+                android:id="@+id/btn_open_gmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enviar una sugerencia"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="16dp"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_menu"
+        android:background="@color/navy_blue"/>
+</androidx.drawerlayout.widget.DrawerLayout>

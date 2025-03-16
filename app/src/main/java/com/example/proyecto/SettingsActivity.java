@@ -109,7 +109,8 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, ImportarLista.class);
             startActivity(intent);
         } else if (id == R.id.nav_info) {
-            // Handle Info action
+            Intent intent = new Intent(this, Info.class);
+            startActivity(intent);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
