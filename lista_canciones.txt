@@ -1,0 +1,56 @@
+Título: Bohemian Rhapsody
+Artista: Queen
+Álbum: A Night at the Opera
+Fecha: 1975/10/31
+Duración: 5:55
+Género: Rock
+
+Título: Bad
+Artista: Michael Jackson
+Álbum: Bad
+Fecha: 1987/09/07
+Duración: 4:07
+Género: Pop
+
+Título: Die Young
+Artista: Kesha
+Álbum: Warrior
+Fecha: 2012/11/25
+Duración: 3:33
+Género: Pop
+
+Título: Piano man
+Artista: Billy Joel
+Álbum: Null
+Fecha: 1973/11/02
+Duración: 5:38
+Género: Rock
+
+Título: Dont Stop me Now
+Artista: Queen
+Álbum: Jazz
+Fecha: 1978/01/26
+Duración: 3:29
+Género: Rock
+
+Título: Another One Bites the Dust
+Artista: Queen
+Álbum: The Game
+Fecha: 1980/06/30
+Duración: 3:36
+Género: Rock
+
+Título: More than a Feeling
+Artista: Boston
+Álbum: Boston
+Fecha: 1976/08/25
+Duración: 4:45
+Género: Rock
+
+Título: Mr. Blue Sky
+Artista: Electric Light Orchestra
+Álbum: Out of the Blue
+Fecha: 1977/10/03
+Duración: 5:05
+Género: Rock
+
