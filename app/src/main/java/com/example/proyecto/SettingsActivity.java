@@ -86,7 +86,8 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else if (id == R.id.nav_descargar_lista) {
-            // Handle Descargar Lista action
+            Intent intent = new Intent(this, DescargarLista.class);
+            startActivity(intent);
         } else if (id == R.id.nav_info) {
             // Handle Info action
         }
