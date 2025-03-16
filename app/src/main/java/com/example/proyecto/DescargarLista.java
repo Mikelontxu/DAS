@@ -181,6 +181,9 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
             startActivity(intent);
         } else if (id == R.id.nav_descargar_lista) {
             // Handle Descargar Lista action
+        } else if (id == R.id.nav_importar_lista) {
+            Intent intent = new Intent(this, ImportarLista.class);
+            startActivity(intent);
         } else if (id == R.id.nav_info) {
             // Handle Info action
         }

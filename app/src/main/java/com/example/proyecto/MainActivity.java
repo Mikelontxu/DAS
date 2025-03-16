@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_descargar_lista) {
             Intent intent = new Intent(this, DescargarLista.class);
             startActivity(intent);
+        } else if (id == R.id.nav_importar_lista) {
+            Intent intent = new Intent(this, ImportarLista.class);
+            startActivity(intent);
         } else if (id == R.id.nav_info) {
             // Handle Info action
         }
