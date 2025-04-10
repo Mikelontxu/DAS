@@ -1,11 +1,22 @@
 package database;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Cancion")
+
+@Entity(
+        tableName = "Cancion",
+        foreignKeys = @ForeignKey(
+                entity = User.class,
+                parentColumns = "id",
+                childColumns = "userId",
+                onDelete = ForeignKey.CASCADE
+        )
+)
+
 public class Song {
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -27,6 +38,9 @@ public class Song {
     @ColumnInfo (name = "genero")
     public String genero;
 
+    @ColumnInfo(name = "userId", index = true)
+    public int userId;
+
     public Song() {
     }
 
@@ -37,6 +51,7 @@ public class Song {
         this.fecha = fecha;
         this.duracion = duracion;
         this.genero = genero;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -67,6 +82,10 @@ public class Song {
         return genero;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -95,4 +114,7 @@ public class Song {
         this.genero = genero;
     }
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }
