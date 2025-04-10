@@ -12,7 +12,7 @@ import android.util.Log;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Song.class}, version = 1, exportSchema = false)
+@Database(entities = {Song.class, User.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract SongDao songDao();
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);

@@ -74,6 +74,7 @@ public class crearCancion extends AppCompatActivity {
                     song.setFecha(fecha.getText().toString());
                     song.setDuracion(duracion.getText().toString());
                     song.setGenero(genero.getText().toString());
+                    song.setUserId(1); // Cambia esto por el ID del usuario actual
 
                     executorService.execute(() -> {
                         AppDatabase db = AppDatabase.getDatabase(getApplicationContext());

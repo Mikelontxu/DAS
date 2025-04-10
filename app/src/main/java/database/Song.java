@@ -39,7 +39,7 @@ public class Song {
     public String genero;
 
     @ColumnInfo(name = "userId", index = true)
-    public int userId;
+    public Integer userId; // Cambiado a Integer para permitir valores nulos
 
     public Song() {
     }
