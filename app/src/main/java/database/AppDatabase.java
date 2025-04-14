@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {Song.class, User.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract SongDao songDao();
+    public abstract UserDao userDao(); // Agregar este método
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
     private static volatile AppDatabase INSTANCE;
 
@@ -40,6 +41,16 @@ public abstract class AppDatabase extends RoomDatabase {
             super.onCreate(db);
             Log.d("AppDatabase", "Base de datos creada, añadiendo valores default");
             databaseWriteExecutor.execute(() -> {
+
+                // Insertar usuario predeterminado
+                UserDao userDao = INSTANCE.userDao();
+                User adminUser = new User();
+                adminUser.setUsername("admin");
+                adminUser.setPassword("admin");
+                adminUser.setEmail("admin@example.com");
+                userDao.insertUser(adminUser);
+                Log.d("AppDatabase", "Default admin user inserted");
+
                 // Insert default songs
                 SongDao dao = INSTANCE.songDao();
                 Song song1 = new Song();
@@ -49,6 +60,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song1.setFecha("1975/10/31");
                 song1.setDuracion("5:55");
                 song1.setGenero("Rock");
+                song1.setUserId(1);
                 dao.insertSong(song1);
 
                 Song song2 = new Song();
@@ -58,6 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song2.setFecha("1987/09/07");
                 song2.setDuracion("4:07");
                 song2.setGenero("Pop");
+                song2.setUserId(1);
                 dao.insertSong(song2);
 
                 Song song3 = new Song();
@@ -67,6 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song3.setFecha("2012/11/25");
                 song3.setDuracion("3:33");
                 song3.setGenero("Pop");
+                song3.setUserId(1);
                 dao.insertSong(song3);
 
                 Song song4 = new Song();
@@ -76,6 +90,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song4.setFecha("1973/11/02");
                 song4.setDuracion("5:38");
                 song4.setGenero("Rock");
+                song4.setUserId(1);
                 dao.insertSong(song4);
 
                 Song song5 = new Song();
@@ -85,6 +100,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song5.setFecha("1978/01/26");
                 song5.setDuracion("3:29");
                 song5.setGenero("Rock");
+                song5.setUserId(1);
                 dao.insertSong(song5);
 
                 Song song6 = new Song();
@@ -94,6 +110,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song6.setFecha("1980/06/30");
                 song6.setDuracion("3:36");
                 song6.setGenero("Rock");
+                song6.setUserId(1);
                 dao.insertSong(song6);
 
                 Song song7 = new Song();
@@ -103,6 +120,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 song7.setFecha("1976/08/25");
                 song7.setDuracion("4:45");
                 song7.setGenero("Rock");
+                song7.setUserId(1);
                 dao.insertSong(song7);
 
                 Song song8 = new Song();
@@ -112,8 +130,10 @@ public abstract class AppDatabase extends RoomDatabase {
                 song8.setFecha("1977/10/03");
                 song8.setDuracion("5:05");
                 song8.setGenero("Rock");
+                song8.setUserId(1);
                 dao.insertSong(song8);
             });
         }
     };
+
 }

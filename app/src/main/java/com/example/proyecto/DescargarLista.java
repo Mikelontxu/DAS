@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -130,30 +131,37 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
     private void descargarLista() {
         executorService.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-            List<Song> songList = db.songDao().getAllSongs();
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
 
-            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(downloadsDir, "lista_canciones.txt");
-            try (FileWriter writer = new FileWriter(file)) {
-                for (Song song : songList) {
-                    writer.write("Título: " + song.getTitulo() + "\n");
-                    writer.write("Artista: " + song.getArtista() + "\n");
-                    writer.write("Álbum: " + song.getAlbum() + "\n");
-                    writer.write("Fecha: " + song.getFecha() + "\n");
-                    writer.write("Duración: " + song.getDuracion() + "\n");
-                    writer.write("Género: " + song.getGenero() + "\n");
-                    writer.write("\n");
-                }
-                runOnUiThread(() -> {
-                    if (file.exists()) {
-                        Toast.makeText(DescargarLista.this, "Lista descargada correctamente", Toast.LENGTH_SHORT).show();
-                        mostrarNotificacion();
-                    } else {
-                        Toast.makeText(DescargarLista.this, "Error al crear el archivo", Toast.LENGTH_SHORT).show();
+            if (userId != -1) {
+                List<Song> songList = db.songDao().getSongsByUserId(userId); // Filtrar canciones por userId
+
+                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File file = new File(downloadsDir, "lista_canciones.txt");
+                try (FileWriter writer = new FileWriter(file)) {
+                    for (Song song : songList) {
+                        writer.write("Título: " + song.getTitulo() + "\n");
+                        writer.write("Artista: " + song.getArtista() + "\n");
+                        writer.write("Álbum: " + song.getAlbum() + "\n");
+                        writer.write("Fecha: " + song.getFecha() + "\n");
+                        writer.write("Duración: " + song.getDuracion() + "\n");
+                        writer.write("Género: " + song.getGenero() + "\n");
+                        writer.write("\n");
                     }
-                });
-            } catch (IOException e) {
-                runOnUiThread(() -> Toast.makeText(DescargarLista.this, "Error al descargar la lista", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> {
+                        if (file.exists()) {
+                            Toast.makeText(DescargarLista.this, "Lista descargada correctamente", Toast.LENGTH_SHORT).show();
+                            mostrarNotificacion();
+                        } else {
+                            Toast.makeText(DescargarLista.this, "Error al crear el archivo", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (IOException e) {
+                    runOnUiThread(() -> Toast.makeText(DescargarLista.this, "Error al descargar la lista", Toast.LENGTH_SHORT).show());
+                }
+            } else {
+                runOnUiThread(() -> Toast.makeText(DescargarLista.this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
             }
         });
     }

@@ -44,6 +44,7 @@ public class Song {
     public Song() {
     }
 
+    @Ignore
     public Song(String titulo, String artista, String album, String fecha, String duracion, String genero) {
         this.titulo = titulo;
         this.artista = artista;
@@ -51,7 +52,6 @@ public class Song {
         this.fecha = fecha;
         this.duracion = duracion;
         this.genero = genero;
-        this.userId = userId;
     }
 
     public int getId() {

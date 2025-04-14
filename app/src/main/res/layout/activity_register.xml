@@ -1,9 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".Registrarse">
 
     <EditText
         android:id="@+id/username_input"
@@ -11,9 +13,19 @@
         android:layout_height="wrap_content"
         android:hint="Nombre de usuario"
         android:inputType="text"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/email_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Correo electrónico"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/username_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -23,28 +35,30 @@
         android:layout_height="wrap_content"
         android:hint="Contraseña"
         android:inputType="textPassword"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/username_input"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/email_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/login_button"
+    <EditText
+        android:id="@+id/repeat_password_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesión"
+        android:hint="Repetir contraseña"
+        android:inputType="textPassword"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/password_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/register_redirect_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/register_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Registrarse"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/login_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/repeat_password_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

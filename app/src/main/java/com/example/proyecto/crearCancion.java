@@ -1,5 +1,6 @@
 package com.example.proyecto;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -74,7 +75,20 @@ public class crearCancion extends AppCompatActivity {
                     song.setFecha(fecha.getText().toString());
                     song.setDuracion(duracion.getText().toString());
                     song.setGenero(genero.getText().toString());
-                    song.setUserId(1); // Cambia esto por el ID del usuario actual
+                    // Recuperar el ID del usuario desde SharedPreferences
+                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    int userId = prefs.getInt("userId", -1); // -1 si no se encuentra el ID
+
+                    if (userId != -1) {
+                        song.setUserId(userId); // Asignar el ID del usuario a la canción
+                    } else {
+                        // Manejar el caso en que no se encuentre el ID del usuario
+                        new AlertDialog.Builder(crearCancion.this)
+                                .setTitle("Error")
+                                .setMessage("No se pudo identificar al usuario. Por favor, inicia sesión nuevamente.")
+                                .setPositiveButton("OK", (dialog, which) -> finish())
+                                .show();
+                    }
 
                     executorService.execute(() -> {
                         AppDatabase db = AppDatabase.getDatabase(getApplicationContext());

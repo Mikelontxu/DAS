@@ -17,6 +17,10 @@
         android:icon="@drawable/ic_import"
         android:title="Importar Lista"/>
     <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_info"
+        android:title="Cerrar sesión" />
+    <item
         android:id="@+id/nav_info"
         android:icon="@drawable/ic_info"
         android:title="Info"/>

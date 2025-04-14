@@ -1,6 +1,7 @@
 package com.example.proyecto;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import database.AppDatabase;
 import database.Song;
 import utils.TemasUtils;
@@ -124,19 +127,16 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
                 String line;
                 Song song = null;
                 AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                boolean isValidFormat = true;
+                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
+                AtomicBoolean isValidFormat = new AtomicBoolean(true); // Use AtomicBoolean
 
                 while ((line = reader.readLine()) != null) {
-                    Log.d(TAG, "Reading line: " + line);
                     if (!line.trim().isEmpty()) {
                         String[] parts = line.split(": ");
                         if (parts.length == 2) {
                             String key = parts[0].trim();
                             String value = parts[1].trim();
-                            Log.d(TAG, "Key: " + key + ", Value: " + value);
-                            if (value.isEmpty()) {
-                                value = null;
-                            }
                             if (song == null) {
                                 song = new Song();
                             }
@@ -160,30 +160,35 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
                                     song.setGenero(value);
                                     break;
                                 default:
-                                    isValidFormat = false;
+                                    isValidFormat.set(false); // Update AtomicBoolean
                                     break;
                             }
                         } else {
-                            isValidFormat = false;
+                            isValidFormat.set(false); // Update AtomicBoolean
                             break;
                         }
                     } else if (song != null) {
-                        db.songDao().insertSong(song);
+                        if (userId != -1) {
+                            song.setUserId(userId); // Asignar el ID del usuario actual
+                            db.songDao().insertSong(song);
+                        }
                         song = null;
                     }
                 }
 
-                if (song != null && isValidFormat) {
+                if (song != null && isValidFormat.get() && userId != -1) {
+                    song.setUserId(userId);
                     db.songDao().insertSong(song);
                 }
 
-                if (isValidFormat) {
-                    runOnUiThread(() -> Toast.makeText(ImportarLista.this, "Subida de datos exitosa", Toast.LENGTH_SHORT).show());
-                } else {
-                    runOnUiThread(() -> Toast.makeText(ImportarLista.this, "Formato de archivo no válido", Toast.LENGTH_SHORT).show());
-                }
+                runOnUiThread(() -> {
+                    if (isValidFormat.get()) {
+                        Toast.makeText(ImportarLista.this, "Subida de datos exitosa", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ImportarLista.this, "Formato de archivo no válido", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } catch (IOException e) {
-                Log.e(TAG, "Error reading file", e);
                 runOnUiThread(() -> Toast.makeText(ImportarLista.this, "Error al importar el archivo", Toast.LENGTH_SHORT).show());
             } finally {
                 try {
@@ -194,7 +199,7 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
                         reader.close();
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "Error closing streams", e);
+                    e.printStackTrace();
                 }
             }
         });

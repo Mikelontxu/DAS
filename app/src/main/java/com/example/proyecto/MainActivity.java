@@ -94,12 +94,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void loadSongs() {
         executorService.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-            songList = db.songDao().getAllSongs();
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
 
-            runOnUiThread(() -> {
-                adapter.updateSongs(songList);
-            });
+            if (userId != -1) {
+                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+                songList = db.songDao().getSongsByUserId(userId); // Filtrar canciones por userId
+
+                runOnUiThread(() -> {
+                    adapter.updateSongs(songList); // Actualizar el adaptador con las canciones filtradas
+                });
+            }
         });
     }
 
@@ -137,6 +142,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_importar_lista) {
             Intent intent = new Intent(this, ImportarLista.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout) {
+            // Cerrar sesión
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove("userId"); // Borra el ID del usuario
+            editor.apply();
+
+            // Redirige a la pantalla de inicio de sesión
+            Intent intent = new Intent(this, IniciarSesion.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_info) {
             Intent intent = new Intent(this, Info.class);
             startActivity(intent);

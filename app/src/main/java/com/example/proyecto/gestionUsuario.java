@@ -29,8 +29,6 @@ public class gestionUsuario extends AppCompatActivity implements NavigationView.
         // Set up drawer layout
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
-
         // Manejar boton de retroceso
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -42,19 +40,12 @@ public class gestionUsuario extends AppCompatActivity implements NavigationView.
         });
     }
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        } else if (id == R.id.nav_iniciar_sesion) {
-            Intent intent = new Intent(this, SettingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
