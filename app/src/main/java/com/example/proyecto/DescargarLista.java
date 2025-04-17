@@ -209,6 +209,18 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_logout) {
+            // Cerrar sesión
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove("userId"); // Borra el ID del usuario
+            editor.apply();
+
+            // Redirige a la pantalla de inicio de sesión
+            Intent intent = new Intent(this, IniciarSesion.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_info) {
             Intent intent = new Intent(this, Info.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
