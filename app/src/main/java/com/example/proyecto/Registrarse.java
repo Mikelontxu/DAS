@@ -69,5 +69,12 @@ public class Registrarse extends AppCompatActivity {
                 });
             }
         });
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Finaliza la actividad actual y vuelve a la anterior
+            }
+        });
     }
 }
