@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import adaptadores.SongAdapter;
@@ -95,15 +98,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadSongs() {
         executorService.execute(() -> {
             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-            int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
+            int userId = prefs.getInt("userId", -1); // Recupera el user_id
 
             if (userId != -1) {
-                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                songList = db.songDao().getSongsByUserId(userId); // Filtrar canciones por userId
-
-                runOnUiThread(() -> {
-                    adapter.updateSongs(songList); // Actualizar el adaptador con las canciones filtradas
-                });
+                try {
+                    List<Song> songs = SongApi.getSongs(userId); // Usa el user_id para obtener las canciones
+                    runOnUiThread(() -> adapter.updateSongs(songs));
+                } catch (Exception e) {
+                    runOnUiThread(() -> Toast.makeText(this, "Error al cargar canciones", Toast.LENGTH_SHORT).show());
+                }
             }
         });
     }

@@ -12,8 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import database.AppDatabase;
-import database.User;
+import api.UserApi;
 
 public class Registrarse extends AppCompatActivity {
 
@@ -51,24 +50,25 @@ public class Registrarse extends AppCompatActivity {
                 }
 
                 executorService.execute(() -> {
-                    AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                    User existingUser = db.userDao().getUserByUsername(username);
-
-                    if (existingUser != null) {
-                        runOnUiThread(() -> Toast.makeText(Registrarse.this, "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show());
-                    } else {
-                        User newUser = new User(username, password, email);
-                        db.userDao().insertUser(newUser);
+                    try {
+                        boolean success = UserApi.addUser(username, password, email);
                         runOnUiThread(() -> {
-                            Toast.makeText(Registrarse.this, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Registrarse.this, IniciarSesion.class);
-                            startActivity(intent);
-                            finish();
+                            if (success) {
+                                Toast.makeText(Registrarse.this, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Registrarse.this, IniciarSesion.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(Registrarse.this, "Error al registrar el usuario", Toast.LENGTH_SHORT).show();
+                            }
                         });
+                    } catch (Exception e) {
+                        runOnUiThread(() -> Toast.makeText(Registrarse.this, e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 });
             }
         });
+
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

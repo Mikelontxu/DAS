@@ -64,4 +64,8 @@ dependencies {
         exclude group: 'com.j256.ormlite', module: 'ormlite-core'
     }
     implementation 'com.google.android.gms:play-services-location:21.3.0'
+
+    // Dependencias de JSON para el manejo de datos
+    implementation ('com.googlecode.json-simple:json-simple:1.1.1')
+            { exclude group: 'junit', module: 'junit' }
 }

@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import utils.TemasUtils;
@@ -51,23 +54,29 @@ public class detallesCancion extends AppCompatActivity {
         if (id != -1) {
             new AlertDialog.Builder(this)
                     .setMessage("¿Estás seguro que quieres borrar esta canción?")
-                    .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            executorService.execute(() -> {
-                                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                                Song song = new Song();
-                                song.setId(id);
-                                db.songDao().deleteSong(song);
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        executorService.execute(() -> {
+                            try {
+                                boolean success = SongApi.deleteSong(id); // Call the API to delete the song
+                                if (success) {
+                                    AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+                                    Song song = new Song();
+                                    song.setId(id);
+                                    db.songDao().deleteSong(song); // Remove the song from the local database
 
-                                runOnUiThread(() -> {
-                                    // Enviar resultado a MainActivity para recargar la lista de canciones
-                                    Intent resultIntent = new Intent();
-                                    setResult(RESULT_OK, resultIntent);
-                                    finish();
-                                });
-                            });
-                        }
+                                    runOnUiThread(() -> {
+                                        // Notify MainActivity to reload the song list
+                                        Intent resultIntent = new Intent();
+                                        setResult(RESULT_OK, resultIntent);
+                                        finish();
+                                    });
+                                } else {
+                                    runOnUiThread(() -> Toast.makeText(detallesCancion.this, "Error al borrar la canción", Toast.LENGTH_SHORT).show());
+                                }
+                            } catch (Exception e) {
+                                runOnUiThread(() -> Toast.makeText(detallesCancion.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                            }
+                        });
                     })
                     .setNegativeButton("No", null)
                     .show();

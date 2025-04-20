@@ -1,0 +1,39 @@
+package api;
+
+import android.util.Log;
+
+import org.json.JSONObject;
+import utils.HttpHandler;
+
+public class UserApi {
+    private static final String BASE_URL = "http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/maranburu011/WEB/api.php";
+
+    public static boolean addUser(String username, String password, String email) throws Exception {
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("action", "add_user");
+        jsonBody.put("username", username);
+        jsonBody.put("password", password);
+        jsonBody.put("email", email);
+
+        String response = HttpHandler.makeRequest(BASE_URL, "POST", jsonBody.toString());
+        JSONObject jsonResponse = new JSONObject(response);
+        return jsonResponse.getBoolean("success");
+    }
+
+    public static int loginUser(String username, String password) throws Exception {
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("action", "login_user");
+        jsonBody.put("username", username);
+        jsonBody.put("password", password);
+
+        String response = HttpHandler.makeRequest(BASE_URL, "POST", jsonBody.toString());
+        Log.d("UserApi", "Server Response: " + response); // Log para depuración
+        JSONObject jsonResponse = new JSONObject(response);
+        if (jsonResponse.getBoolean("success")) {
+            JSONObject data = jsonResponse.getJSONObject("data"); // Extrae el objeto `data`
+            return data.getInt("user_id"); // Obtiene el `user_id` desde `data`
+        } else {
+            throw new Exception(jsonResponse.getString("message"));
+        }
+    }
+}

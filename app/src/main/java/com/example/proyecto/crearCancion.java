@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import utils.TemasUtils;
@@ -16,6 +18,8 @@ import utils.TemasUtils;
 // Imports para el calendario
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
 public class crearCancion extends AppCompatActivity {
@@ -46,8 +50,8 @@ public class crearCancion extends AppCompatActivity {
             // Crea un DatePickerDialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(crearCancion.this,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        // Actualiza el campo de texto con la fecha seleccionada
-                        String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        // Formatea la fecha como YYYY-MM-DD
+                        String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
                         fecha.setText(selectedDate);
                     }, year, month, day);
 
@@ -55,46 +59,57 @@ public class crearCancion extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        btnGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String tituloText = titulo.getText().toString();
-                String artistaText = artista.getText().toString();
-                // Comprobamos que los campos obligatorios no estén vacíos y salta un dialogo si lo esta
-                if (tituloText.isEmpty() || artistaText.isEmpty()) {
-                    new AlertDialog.Builder(crearCancion.this)
-                            .setTitle("Campos obligatorios")
-                            .setMessage("Por favor, introduce el título y el artista de la canción.")
-                            .setPositiveButton("OK", null)
-                            .show();
-                } else {
-                    Song song = new Song();
-                    song.setTitulo(tituloText);
-                    song.setArtista(artistaText);
-                    song.setAlbum(album.getText().toString());
-                    song.setFecha(fecha.getText().toString());
-                    song.setDuracion(duracion.getText().toString());
-                    song.setGenero(genero.getText().toString());
-                    // Recuperar el ID del usuario desde SharedPreferences
-                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    int userId = prefs.getInt("userId", -1); // -1 si no se encuentra el ID
+        btnGuardar.setOnClickListener(v -> {
+            String tituloText = titulo.getText().toString();
+            String artistaText = artista.getText().toString();
+            String fechaText = fecha.getText().toString();
+            String duracionText = duracion.getText().toString();
 
-                    if (userId != -1) {
-                        song.setUserId(userId); // Asignar el ID del usuario a la canción
-                    } else {
-                        // Manejar el caso en que no se encuentre el ID del usuario
-                        new AlertDialog.Builder(crearCancion.this)
-                                .setTitle("Error")
-                                .setMessage("No se pudo identificar al usuario. Por favor, inicia sesión nuevamente.")
-                                .setPositiveButton("OK", (dialog, which) -> finish())
-                                .show();
-                    }
+            if (tituloText.isEmpty() || artistaText.isEmpty()) {
+                new AlertDialog.Builder(crearCancion.this)
+                        .setTitle("Campos obligatorios")
+                        .setMessage("Por favor, introduce el título y el artista de la canción.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else if (!fechaText.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                // Validar formato de fecha
+                new AlertDialog.Builder(crearCancion.this)
+                        .setTitle("Formato de fecha incorrecto")
+                        .setMessage("La fecha debe estar en el formato YYYY-MM-DD.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else if (!duracionText.matches("\\d{1,2}:\\d{2}")) {
+                // Validar formato de duración
+                new AlertDialog.Builder(crearCancion.this)
+                        .setTitle("Formato de duración incorrecto")
+                        .setMessage("La duración debe estar en el formato H:MM.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else {
+                Song song = new Song();
+                song.setTitulo(tituloText);
+                song.setArtista(artistaText);
+                song.setAlbum(album.getText().toString());
+                song.setFecha(fechaText);
+                song.setDuracion(duracionText);
+                song.setGenero(genero.getText().toString());
 
+                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                int userId = prefs.getInt("userId", -1);
+                if (userId != -1) {
+                    song.setUserId(userId);
                     executorService.execute(() -> {
-                        AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                        db.songDao().insertSong(song);
-                        setResult(RESULT_OK); // Set result to OK
-                        finish();
+                        try {
+                            boolean success = SongApi.addSong(song);
+                            if (success) {
+                                runOnUiThread(() -> {
+                                    setResult(RESULT_OK);
+                                    finish();
+                                });
+                            }
+                        } catch (Exception e) {
+                            runOnUiThread(() -> Toast.makeText(crearCancion.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        }
                     });
                 }
             }

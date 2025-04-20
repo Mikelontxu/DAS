@@ -26,7 +26,7 @@
                 android:id="@+id/tv_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Esta aplicación esta hecha para poder crear listas de música y poder guardarlas cuando quieras. Así podrás tener tus listas de música favoritas siempre a mano. \n\nPara utilizarla facilmente solo hay que ir al Home y en el empezar a crear canciones con el boton de arriba a la derecha. Además las podras revisar haciendo click en ellas cuando aparezcan en el Home. \n\nLuego si quieres importar o exportar, tienes otros dos menus en el desplegable de la izquierda."
+                android:text="Esta aplicación esta hecha para poder crear listas de música y poder guardarlas cuando quieras. Así podrás tener tus listas de música favoritas siempre a mano. \n\nPara utilizarla facilmente solo hay que ir al Home y en el empezar a crear canciones con el boton de arriba a la derecha. Además las podras revisar haciendo click en ellas cuando aparezcan en el Home. \n\nLuego si quieres importar o exportar, tienes otros dos menus en el desplegable de la izquierda.\n\n Esta nueva versión tambien incluye un mapa por si te interesan tiendas de musica"
                 android:textSize="18sp"
                 android:padding="16dp"
                 android:layout_gravity="center"/>
