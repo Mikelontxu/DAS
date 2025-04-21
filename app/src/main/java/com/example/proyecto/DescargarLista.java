@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import utils.TemasUtils;
@@ -130,38 +132,39 @@ public class DescargarLista extends AppCompatActivity implements NavigationView.
 
     private void descargarLista() {
         executorService.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
 
             if (userId != -1) {
-                List<Song> songList = db.songDao().getSongsByUserId(userId); // Filtrar canciones por userId
+                try {
+                    // Obtener las canciones desde la API
+                    List<Song> songs = SongApi.getSongs(userId);
 
-                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File file = new File(downloadsDir, "lista_canciones.txt");
-                try (FileWriter writer = new FileWriter(file)) {
-                    for (Song song : songList) {
-                        writer.write("Título: " + song.getTitulo() + "\n");
-                        writer.write("Artista: " + song.getArtista() + "\n");
-                        writer.write("Álbum: " + song.getAlbum() + "\n");
-                        writer.write("Fecha: " + song.getFecha() + "\n");
-                        writer.write("Duración: " + song.getDuracion() + "\n");
-                        writer.write("Género: " + song.getGenero() + "\n");
-                        writer.write("\n");
-                    }
-                    runOnUiThread(() -> {
-                        if (file.exists()) {
-                            Toast.makeText(DescargarLista.this, "Lista descargada correctamente", Toast.LENGTH_SHORT).show();
-                            mostrarNotificacion();
-                        } else {
-                            Toast.makeText(DescargarLista.this, "Error al crear el archivo", Toast.LENGTH_SHORT).show();
+                    // Crear el archivo .txt en el almacenamiento
+                    File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    File file = new File(downloadsDir, "lista_canciones.txt");
+
+                    try (FileWriter writer = new FileWriter(file)) {
+                        for (Song song : songs) {
+                            writer.write("Título: " + song.getTitulo() + "\n");
+                            writer.write("Artista: " + song.getArtista() + "\n");
+                            writer.write("Álbum: " + (song.getAlbum() != null ? song.getAlbum() : "N/A") + "\n");
+                            writer.write("Fecha: " + (song.getFecha() != null ? song.getFecha() : "N/A") + "\n");
+                            writer.write("Duración: " + (song.getDuracion() != null ? song.getDuracion() : "N/A") + "\n");
+                            writer.write("Género: " + (song.getGenero() != null ? song.getGenero() : "N/A") + "\n");
+                            writer.write("\n");
                         }
+                    }
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Lista descargada en: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                        mostrarNotificacion();
                     });
-                } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(DescargarLista.this, "Error al descargar la lista", Toast.LENGTH_SHORT).show());
+                } catch (Exception e) {
+                    runOnUiThread(() -> Toast.makeText(this, "Error al descargar la lista: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             } else {
-                runOnUiThread(() -> Toast.makeText(DescargarLista.this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
             }
         });
     }

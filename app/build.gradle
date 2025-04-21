@@ -72,4 +72,7 @@ dependencies {
     // Dependencias de JSON para el manejo de datos
     implementation ('com.googlecode.json-simple:json-simple:1.1.1')
             { exclude group: 'junit', module: 'junit' }
+
+    // Dependencias de WorkManager para tareas en primer plano
+    implementation "androidx.work:work-runtime:2.8.1"
 }

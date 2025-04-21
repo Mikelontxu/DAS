@@ -18,6 +18,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import utils.TemasUtils;
@@ -128,95 +134,79 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
         if (requestCode == PICK_TXT_FILE && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             if (uri != null) {
-                importTxtFile(uri);
+                importJsonFile(uri);
             }
         }
     }
 
-    private void importTxtFile(Uri uri) {
+    private void importJsonFile(Uri uri) {
         executorService.execute(() -> {
             InputStream inputStream = null;
             BufferedReader reader = null;
             try {
                 inputStream = getContentResolver().openInputStream(uri);
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-
+                StringBuilder jsonBuilder = new StringBuilder();
                 String line;
-                Song song = null;
-                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
-                AtomicBoolean isValidFormat = new AtomicBoolean(true); // Use AtomicBoolean
 
                 while ((line = reader.readLine()) != null) {
-                    if (!line.trim().isEmpty()) {
-                        String[] parts = line.split(": ");
-                        if (parts.length == 2) {
-                            String key = parts[0].trim();
-                            String value = parts[1].trim();
-                            if (song == null) {
-                                song = new Song();
-                            }
-                            switch (key) {
-                                case "Título":
-                                    song.setTitulo(value);
-                                    break;
-                                case "Artista":
-                                    song.setArtista(value);
-                                    break;
-                                case "Álbum":
-                                    song.setAlbum(value);
-                                    break;
-                                case "Fecha":
-                                    song.setFecha(value);
-                                    break;
-                                case "Duración":
-                                    song.setDuracion(value);
-                                    break;
-                                case "Género":
-                                    song.setGenero(value);
-                                    break;
-                                default:
-                                    isValidFormat.set(false); // Update AtomicBoolean
-                                    break;
-                            }
-                        } else {
-                            isValidFormat.set(false); // Update AtomicBoolean
-                            break;
-                        }
-                    } else if (song != null) {
-                        if (userId != -1) {
-                            song.setUserId(userId); // Asignar el ID del usuario actual
-                            db.songDao().insertSong(song);
-                        }
-                        song = null;
-                    }
+                    jsonBuilder.append(line);
                 }
 
-                if (song != null && isValidFormat.get() && userId != -1) {
-                    song.setUserId(userId);
-                    db.songDao().insertSong(song);
-                }
+                String jsonString = jsonBuilder.toString();
+                JSONObject rootObject = new JSONObject(jsonString);
 
-                runOnUiThread(() -> {
-                    if (isValidFormat.get()) {
-                        Toast.makeText(ImportarLista.this, "Subida de datos exitosa", Toast.LENGTH_SHORT).show();
+                // Verifica si el JSON tiene éxito y contiene datos
+                if (rootObject.getBoolean("success")) {
+                    JSONArray jsonArray = rootObject.getJSONArray("data");
+
+                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
+
+                    if (userId != -1) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonSong = jsonArray.getJSONObject(i);
+                            Song song = new Song();
+
+                            song.setTitulo(jsonSong.getString("titulo"));
+                            song.setArtista(jsonSong.getString("artista"));
+                            song.setAlbum(jsonSong.optString("album", null));
+                            song.setFecha(jsonSong.optString("fecha", null));
+                            song.setDuracion(jsonSong.optString("duracion", null));
+                            song.setGenero(jsonSong.optString("genero", null));
+                            song.setUserId(userId);
+
+                            try {
+                                boolean success = SongApi.addSong(song);
+                                if (!success) {
+                                    Log.e(TAG, "Error al añadir la canción: " + song.getTitulo());
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al procesar la canción: " + e.getMessage(), e);
+                            }
+                        }
+
+                        runOnUiThread(() -> Toast.makeText(this, "Importación completada", Toast.LENGTH_SHORT).show());
                     } else {
-                        Toast.makeText(ImportarLista.this, "Formato de archivo no válido", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
                     }
-                });
-            } catch (IOException e) {
-                runOnUiThread(() -> Toast.makeText(ImportarLista.this, "Error al importar el archivo", Toast.LENGTH_SHORT).show());
+                } else {
+                    runOnUiThread(() -> {
+                        try {
+                            Toast.makeText(this, "Error en el JSON: " + rootObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Error al importar el archivo: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } finally {
                 try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                    if (reader != null) {
-                        reader.close();
-                    }
+                    if (reader != null) reader.close();
+                    if (inputStream != null) inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error al cerrar el archivo: " + e.getMessage(), e);
                 }
             }
         });
