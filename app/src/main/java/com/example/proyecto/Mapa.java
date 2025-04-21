@@ -2,6 +2,7 @@ package com.example.proyecto;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -145,10 +146,16 @@ public class Mapa extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_logout) {
+            // Cerrar sesión
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove("userId"); // Borra el ID del usuario
+            editor.apply();
+
+            // Redirige a la pantalla de inicio de sesión
             Intent intent = new Intent(this, IniciarSesion.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
             finish();
         } else if (id == R.id.nav_info) {
             Intent intent = new Intent(this, Info.class);
