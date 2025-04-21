@@ -11,6 +11,11 @@
         android:defaultValue="white" />
 
     <Preference
+        android:key="change_profile_picture"
+        android:title="Cambiar foto de perfil"
+        android:summary="Selecciona una foto desde la cámara o galería para tu perfil" />
+
+    <Preference
         android:key="delete_all_songs"
         android:title="Borrar datos de la aplicación"
         android:summary="Borra todos los datos de la base de datos" />
