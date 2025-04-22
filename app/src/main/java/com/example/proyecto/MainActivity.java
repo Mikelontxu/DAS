@@ -23,17 +23,22 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import api.SongApi;
 import database.AppDatabase;
 import database.Song;
 import adaptadores.SongAdapter;
 import utils.TemasUtils;
+import widget.WidgetUpdateWorker;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,6 +56,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         View rootView = findViewById(R.id.drawer_layout);
         TemasUtils.applyTheme(this, rootView);
+
+        // Configurar WorkManager para actualizaciones periódicas
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(WidgetUpdateWorker.class, 30, TimeUnit.MINUTES)
+                .build();
+        WorkManager.getInstance(this).enqueue(workRequest);
 
         // Set up the toolbar and navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);

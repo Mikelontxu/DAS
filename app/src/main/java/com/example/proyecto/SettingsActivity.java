@@ -287,30 +287,22 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         }
 
         private void deleteAllSongs() {
-            SharedPreferences prefs = getActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE); // Cambiar a "UserPrefs"
-            int userId = prefs.getInt("userId", -1); // Recupera el user_id
+            SharedPreferences prefs = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            int userId = prefs.getInt("userId", -1);
 
             if (userId != -1) {
                 executorService.execute(() -> {
                     try {
-                        // Llama a la API para borrar todas las canciones del servidor
                         boolean success = SongApi.deleteAllSongs(userId);
-                        if (success) {
-                            // Borra las canciones de la base de datos local
-                            AppDatabase db = AppDatabase.getDatabase(getContext());
-                            db.songDao().deleteAllSongs();
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getContext(), "Todas las canciones han sido borradas", Toast.LENGTH_SHORT).show()
-                            );
-                        } else {
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getContext(), "Error al borrar canciones en el servidor", Toast.LENGTH_SHORT).show()
-                            );
-                        }
+                        getActivity().runOnUiThread(() -> {
+                            if (success) {
+                                Toast.makeText(getContext(), "Todas las canciones han sido borradas", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Error al borrar canciones en el servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } catch (Exception e) {
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show()
-                        );
+                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 });
             } else {

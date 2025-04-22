@@ -146,61 +146,87 @@ public class ImportarLista extends AppCompatActivity implements NavigationView.O
             try {
                 inputStream = getContentResolver().openInputStream(uri);
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder jsonBuilder = new StringBuilder();
                 String line;
+                Song song = new Song();
+                int userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getInt("userId", -1);
 
-                while ((line = reader.readLine()) != null) {
-                    jsonBuilder.append(line);
+                if (userId == -1) {
+                    runOnUiThread(() -> Toast.makeText(this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
+                    return;
                 }
 
-                String jsonString = jsonBuilder.toString();
-                JSONObject rootObject = new JSONObject(jsonString);
+                song.setUserId(userId);
+                int lineCounter = 0;
 
-                // Verifica si el JSON tiene éxito y contiene datos
-                if (rootObject.getBoolean("success")) {
-                    JSONArray jsonArray = rootObject.getJSONArray("data");
-
-                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    int userId = prefs.getInt("userId", -1); // Recuperar el ID del usuario actual
-
-                    if (userId != -1) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonSong = jsonArray.getJSONObject(i);
-                            Song song = new Song();
-
-                            song.setTitulo(jsonSong.getString("titulo"));
-                            song.setArtista(jsonSong.getString("artista"));
-                            song.setAlbum(jsonSong.optString("album", null));
-                            song.setFecha(jsonSong.optString("fecha", null));
-                            song.setDuracion(jsonSong.optString("duracion", null));
-                            song.setGenero(jsonSong.optString("genero", null));
-                            song.setUserId(userId);
-
-                            try {
-                                boolean success = SongApi.addSong(song);
-                                if (!success) {
-                                    Log.e(TAG, "Error al añadir la canción: " + song.getTitulo());
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim(); // Elimina espacios en blanco
+                    if (line.isEmpty()) {
+                        // Si encontramos una línea vacía, procesamos la canción actual
+                        if (song.getTitulo() != null && song.getArtista() != null) {
+                            Song finalSong = song;
+                            executorService.execute(() -> {
+                                try {
+                                    boolean success = SongApi.addSong(finalSong);
+                                    if (!success) {
+                                        Log.e(TAG, "Error al agregar la canción al servidor: " + finalSong.getTitulo());
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error al agregar la canción: " + e.getMessage(), e);
                                 }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error al procesar la canción: " + e.getMessage(), e);
-                            }
+                            });
                         }
-
-                        runOnUiThread(() -> Toast.makeText(this, "Importación completada", Toast.LENGTH_SHORT).show());
+                        // Reinicia el objeto `Song` para la siguiente canción
+                        song = new Song();
+                        song.setUserId(userId);
+                        lineCounter = 0;
                     } else {
-                        runOnUiThread(() -> Toast.makeText(this, "Usuario no identificado", Toast.LENGTH_SHORT).show());
+                        // Asigna los valores a los campos de la canción según el orden de las líneas
+                        switch (lineCounter) {
+                            case 0:
+                                song.setTitulo(line);
+                                break;
+                            case 1:
+                                song.setArtista(line);
+                                break;
+                            case 2:
+                                song.setAlbum(line.isEmpty() ? null : line);
+                                break;
+                            case 3:
+                                song.setFecha(line.isEmpty() ? null : line);
+                                break;
+                            case 4:
+                                song.setDuracion(line.isEmpty() ? null : line);
+                                break;
+                            case 5:
+                                song.setGenero(line.isEmpty() ? null : line);
+                                break;
+                            default:
+                                Log.w(TAG, "Línea inesperada: " + line);
+                                break;
+                        }
+                        lineCounter++;
                     }
-                } else {
-                    runOnUiThread(() -> {
+                }
+
+                // Procesa la última canción si no termina con una línea vacía
+                if (song.getTitulo() != null && song.getArtista() != null) {
+                    Song finalSong = song;
+                    executorService.execute(() -> {
                         try {
-                            Toast.makeText(this, "Error en el JSON: " + rootObject.getString("message"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                            boolean success = SongApi.addSong(finalSong);
+                            if (!success) {
+                                Log.e(TAG, "Error al agregar la canción al servidor: " + finalSong.getTitulo());
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error al agregar la canción: " + e.getMessage(), e);
                         }
                     });
                 }
+
+                runOnUiThread(() -> Toast.makeText(this, "Importación completada", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
-                runOnUiThread(() -> Toast.makeText(this, "Error al importar el archivo: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Error al importar el archivo: " + e.getMessage(), e);
+                runOnUiThread(() -> Toast.makeText(this, "Error al importar el archivo", Toast.LENGTH_SHORT).show());
             } finally {
                 try {
                     if (reader != null) reader.close();
