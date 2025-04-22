@@ -41,7 +41,7 @@
                 android:resource="@xml/song_widget_info" />
         </receiver>
 
-        <receiver android:name=".ReminderReceiver" />
+        <receiver android:name="alarma.Reminder" />
 
         <activity
             android:name=".IniciarSesion"
