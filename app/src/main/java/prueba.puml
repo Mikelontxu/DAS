@@ -1,0 +1,133 @@
+@startuml
+' Diagrama de clases basado en los archivos proporcionados
+
+package "com.example.proyecto" {
+    class MainActivity {
+        - drawerLayout : DrawerLayout
+        - executorService : ExecutorService
+        - adapter : SongAdapter
+        - songList : List<Song>
+        - recyclerView : RecyclerView
+        + onCreate(Bundle) : void
+        + loadSongs() : void
+    }
+
+    class crearCancion {
+        - executorService : ExecutorService
+        + onCreate(Bundle) : void
+        + volverAtras(View) : void
+    }
+
+    class detallesCancion {
+        - id : int
+        - executorService : ExecutorService
+        + onCreate(Bundle) : void
+        + volverAtras(View) : void
+        + borrarCancion(View) : void
+    }
+
+    class DescargarLista {
+        - executorService : ExecutorService
+        - drawerLayout : DrawerLayout
+        + onCreate(Bundle) : void
+        + descargarLista() : void
+    }
+
+    class ImportarLista {
+        - executorService : ExecutorService
+        - drawerLayout : DrawerLayout
+        + onCreate(Bundle) : void
+        + importJsonFile(Uri) : void
+    }
+
+    class Info {
+        - drawerLayout : DrawerLayout
+        + onCreate(Bundle) : void
+    }
+
+    class IniciarSesion {
+        - usernameInput : EditText
+        - passwordInput : EditText
+        - loginButton : Button
+        - registerRedirectButton : Button
+        - executorService : ExecutorService
+        + onCreate(Bundle) : void
+    }
+
+    class SettingsActivity {
+        - drawerLayout : DrawerLayout
+        - executorService : ExecutorService
+        + onCreate(Bundle) : void
+    }
+
+    class Mapa {
+        - drawerLayout : DrawerLayout
+        - mapView : MapView
+        + onCreate(Bundle) : void
+        + addMusicStoreMarkers() : void
+    }
+}
+
+package "api" {
+    class SongApi {
+        + getSongs(int) : List<Song>
+        + addSong(Song) : boolean
+        + deleteSong(int) : boolean
+        + deleteAllSongs(int) : boolean
+    }
+
+    class UserApi {
+        + loginUser(String, String) : int
+        + getProfilePicture(int) : Bitmap
+        + getUsername(int) : String
+        + uploadProfilePictureMultipart(int, String, byte[]) : boolean
+    }
+}
+
+package "database" {
+    class AppDatabase {
+        + getDatabase(Context) : AppDatabase
+    }
+
+    class Song {
+        - id : int
+        - titulo : String
+        - artista : String
+        - album : String
+        - fecha : String
+        - duracion : String
+        - genero : String
+        - userId : int
+    }
+}
+
+package "utils" {
+    class TemasUtils {
+        + applyTheme(Context, View) : void
+    }
+}
+
+package "widget" {
+    class SongWidgetProvider {
+        - currentPage : int
+        - SONGS_PER_PAGE : int
+        + onUpdate(Context, AppWidgetManager, int[]) : void
+        + onReceive(Context, Intent) : void
+    }
+
+    class WidgetUpdateWorker {
+        + doWork() : Result
+    }
+}
+
+MainActivity --> SongApi : "Usa"
+MainActivity --> Song : "Lista de canciones"
+crearCancion --> SongApi : "Usa"
+detallesCancion --> SongApi : "Usa"
+DescargarLista --> SongApi : "Usa"
+ImportarLista --> SongApi : "Usa"
+SettingsActivity --> UserApi : "Usa"
+SettingsActivity --> TemasUtils : "Usa"
+Mapa --> TemasUtils : "Usa"
+
+@enduml
