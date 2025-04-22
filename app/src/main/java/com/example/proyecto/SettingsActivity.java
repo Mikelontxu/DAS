@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import alarma.AlarmHelper;
 import api.SongApi;
 import api.UserApi;
 import database.AppDatabase;
@@ -225,6 +226,28 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             if (changeProfilePicturePreference != null) {
                 changeProfilePicturePreference.setOnPreferenceClickListener(preference -> {
                     showImagePickerDialog();
+                    return true;
+                });
+            }
+
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            boolean isAlarmEnabled = sharedPreferences.getBoolean("enable_alarm", false);
+            if (isAlarmEnabled) {
+                AlarmHelper.scheduleDailyReminder(requireContext());
+            }
+            // Escuchar cambios en la preferencia de alarma
+            Preference enableAlarmPreference = findPreference("enable_alarm");
+            if (enableAlarmPreference != null) {
+                enableAlarmPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    boolean isEnabled = (boolean) newValue;
+                    if (isEnabled) {
+                        AlarmHelper.scheduleDailyReminder(requireContext());
+                        Toast.makeText(getContext(), "Recordatorio activado", Toast.LENGTH_SHORT).show();
+                    } else {
+                        AlarmHelper.cancelDailyReminder(requireContext());
+                        Toast.makeText(getContext(), "Recordatorio desactivado", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 });
             }

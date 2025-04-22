@@ -20,4 +20,10 @@
         android:title="Borrar datos de la aplicación"
         android:summary="Borra todos los datos de la base de datos" />
 
+    <SwitchPreferenceCompat
+        android:key="enable_alarm"
+        android:title="Activar recordatorio diario"
+        android:summary="Recibir una notificación diaria a las 11:00 AM para escuchar música"
+        android:defaultValue="false" />
+
 </PreferenceScreen>
