@@ -56,7 +56,6 @@
         <activity android:name=".crearCancion" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".gestionUsuario" />
         <activity android:name=".DescargarLista" />
         <activity android:name=".ImportarLista" />
         <activity android:name=".Info" />
