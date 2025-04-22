@@ -326,7 +326,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         private void showConfirmationDialog() {
             new AlertDialog.Builder(getContext())
                     .setTitle("Confirmar borrado")
-                    .setMessage("¿Estás seguro de que quieres borrar todos los datos de la base de datos?")
+                    .setMessage("¿Estás seguro de que quieres borrar todos los datos de tu lista?")
                     .setPositiveButton("Sí", (dialog, which) -> deleteAllSongs())
                     .setNegativeButton("No", null)
                     .show();
