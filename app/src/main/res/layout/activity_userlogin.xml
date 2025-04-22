@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:background="@drawable/fondo">
-
+        android:background="@color/navy_blue">
+    <!--  android:background="@drawable/fondo"> -->
         <!-- Línea guía horizontal para centrar los elementos -->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/center_vertical_guide"

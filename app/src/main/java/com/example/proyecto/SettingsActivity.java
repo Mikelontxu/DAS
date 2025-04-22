@@ -191,10 +191,26 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         private ExecutorService executorService = Executors.newSingleThreadExecutor();
         private ActivityResultLauncher<Intent> cameraLauncher;
         private ActivityResultLauncher<Intent> galleryLauncher;
+        private ActivityResultLauncher<String> requestPermissionLauncher;
+
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences, rootKey);
+
+            // Initialize permission launcher
+            requestPermissionLauncher = registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {
+                        if (isGranted) {
+                            Log.d("SettingsFragment", "Permiso de cámara concedido");
+                            launchCameraIntent();
+                        } else {
+                            Log.d("SettingsFragment", "Permiso de cámara denegado");
+                            Toast.makeText(getContext(), "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            );
 
             Preference deleteAllSongsPreference = findPreference("delete_all_songs");
             if (deleteAllSongsPreference != null) {
@@ -212,7 +228,6 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
                     return true;
                 });
             }
-
         }
 
         private void initializeActivityResultLaunchers() {
@@ -256,22 +271,30 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         }
 
         private void openCamera() {
-            if (isCameraAvailable(getContext())) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                    cameraLauncher.launch(cameraIntent);
-                } else {
-                    Toast.makeText(getContext(), "No se encontró una aplicación de cámara", Toast.LENGTH_SHORT).show();
-                }
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                Log.d("SettingsFragment", "Solicitando permiso de cámara");
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
             } else {
-                Toast.makeText(getContext(), "El dispositivo no tiene cámara disponible", Toast.LENGTH_SHORT).show();
+                Log.d("SettingsFragment", "Permiso de cámara ya concedido");
+                launchCameraIntent();
             }
         }
 
-        private boolean isCameraAvailable(Context context) {
-            return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+        private void launchCameraIntent() {
+            if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    Log.d("SettingsFragment", "Lanzando intent de cámara");
+                    cameraLauncher.launch(cameraIntent);
+                } else {
+                    Log.d("SettingsFragment", "No se encontró una aplicación de cámara");
+                    Toast.makeText(getContext(), "No se encontró una aplicación de cámara", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.d("SettingsFragment", "El dispositivo no tiene cámara");
+                Toast.makeText(getContext(), "El dispositivo no tiene cámara", Toast.LENGTH_SHORT).show();
+            }
         }
-
         private void openGallery() {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryLauncher.launch(galleryIntent);
