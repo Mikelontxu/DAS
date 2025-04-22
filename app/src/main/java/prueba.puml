@@ -10,12 +10,13 @@ package "com.example.proyecto" {
         - recyclerView : RecyclerView
         + onCreate(Bundle) : void
         + loadSongs() : void
+        + onNavigationItemSelected(MenuItem) : boolean
     }
 
     class crearCancion {
         - executorService : ExecutorService
         + onCreate(Bundle) : void
-        + volverAtras(View) : void
+        + saveSong(View) : void
     }
 
     class detallesCancion {
@@ -43,6 +44,7 @@ package "com.example.proyecto" {
     class Info {
         - drawerLayout : DrawerLayout
         + onCreate(Bundle) : void
+        + onNavigationItemSelected(MenuItem) : boolean
     }
 
     class IniciarSesion {
@@ -52,12 +54,14 @@ package "com.example.proyecto" {
         - registerRedirectButton : Button
         - executorService : ExecutorService
         + onCreate(Bundle) : void
+        + login(View) : void
     }
 
     class SettingsActivity {
         - drawerLayout : DrawerLayout
         - executorService : ExecutorService
         + onCreate(Bundle) : void
+        + onNavigationItemSelected(MenuItem) : boolean
     }
 
     class Mapa {
@@ -98,6 +102,10 @@ package "database" {
         - duracion : String
         - genero : String
         - userId : int
+        + getId() : int
+        + setId(int) : void
+        + getTitulo() : String
+        + setTitulo(String) : void
     }
 }
 
